@@ -22,7 +22,7 @@ data:
     storage:
         trace:
             azure:
-                container_name: tempo
+                container-name: tempo
             backend: gcs
             blocklist_poll: "0"
             cache: memcached

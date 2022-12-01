@@ -10,6 +10,13 @@ tempo {
   },
 
   _config+:: {
+    multi_zone_ingester_enabled: false,
+    multi_zone_ingester_migration_enabled: false,
+    multi_zone_ingester_replicas: 3,
+    multi_zone_ingester_max_unavailable: 1,
+    variables_expansion: false,
+    variables_expansion_env_mixin: [],
+
     namespace: 'tracing',
     compactor+: {
       replicas: 5,

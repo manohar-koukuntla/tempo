@@ -19,7 +19,7 @@ spec:
   template:
     metadata:
       annotations:
-        config_hash: 282a5956d7363ec1a10ec681e5589158
+        config_hash: 15acd5511dbb9b46b5e58e3fa1059843
       labels:
         app: querier
         name: querier
@@ -27,9 +27,10 @@ spec:
     spec:
       containers:
       - args:
-        - -target=querier
+        - -config.expand-env=true
         - -config.file=/conf/tempo.yaml
         - -mem-ballast-size-mbs=1024
+        - -target=querier
         image: grafana/tempo:latest
         imagePullPolicy: IfNotPresent
         name: querier

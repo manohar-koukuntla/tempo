@@ -1,32 +1,41 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: ingester
+  annotations:
+    rollout-max-unavailable: "1"
+  labels:
+    rollout-group: ingester
+  name: ingester-zone-b
   namespace: tracing
 spec:
   podManagementPolicy: Parallel
-  replicas: 10
+  replicas: 1
   selector:
     matchLabels:
-      app: ingester
-      name: ingester
-      tempo-gossip-member: "true"
+      name: ingester-zone-b
+      rollout-group: ingester
   serviceName: ingester
   template:
     metadata:
       annotations:
-        config_hash: df848edaed79a9620eb44a18be4ce4f5
+        config_hash: 9c334fb94b01be9a51cd2aa424acbd9c
       labels:
-        app: ingester
-        name: ingester
-        tempo-gossip-member: "true"
+        name: ingester-zone-b
+        rollout-group: ingester
     spec:
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
           - labelSelector:
-              matchLabels:
-                name: ingester
+              matchExpressions:
+              - key: rollout-group
+                operator: In
+                values:
+                - ingester
+              - key: name
+                operator: NotIn
+                values:
+                - ingester-zone-b
             topologyKey: kubernetes.io/hostname
       containers:
       - args:
@@ -34,6 +43,9 @@ spec:
         - -config.file=/conf/tempo.yaml
         - -mem-ballast-size-mbs=1024
         - -target=ingester
+        env:
+        - name: AVAILABILITY_ZONE
+          value: b
         image: grafana/tempo:latest
         imagePullPolicy: IfNotPresent
         name: ingester
@@ -69,7 +81,7 @@ spec:
           name: tempo-overrides
         name: overrides
   updateStrategy:
-    type: RollingUpdate
+    type: OnDelete
   volumeClaimTemplates:
   - apiVersion: v1
     kind: PersistentVolumeClaim

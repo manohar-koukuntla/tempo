@@ -19,7 +19,7 @@ spec:
   template:
     metadata:
       annotations:
-        config_hash: 68ecabe76a76226ca514106156b173a8
+        config_hash: 264025c7ed58d6666fe3c7278e8993f2
       labels:
         app: metrics-generator
         name: metrics-generator
@@ -27,9 +27,10 @@ spec:
     spec:
       containers:
       - args:
-        - -target=metrics-generator
+        - -config.expand-env=true
         - -config.file=/conf/tempo.yaml
         - -mem-ballast-size-mbs=1024
+        - -target=metrics-generator
         image: grafana/tempo:latest
         imagePullPolicy: IfNotPresent
         name: metrics-generator
