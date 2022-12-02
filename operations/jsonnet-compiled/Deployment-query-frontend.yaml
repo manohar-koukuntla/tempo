@@ -25,7 +25,6 @@ spec:
     spec:
       containers:
       - args:
-        - -config.expand-env=true
         - -config.file=/conf/tempo.yaml
         - -mem-ballast-size-mbs=1024
         - -target=query-frontend
