@@ -18,7 +18,6 @@
   tempo_query_frontend_args:: {
                                 target: target_name,
                                 'config.file': '/conf/tempo.yaml',
-                                'config.expand-env': true,
                                 'mem-ballast-size-mbs': $._config.ballast_size_mbs,
                                },
 
@@ -33,7 +32,7 @@
     ]) +
     $.util.withResources($._config.query_frontend.resources) +
     $.util.readinessProbe +
-    (if $._config.variables_expansion then container.withArgsMixin(['--config.expand-env=true']) else {}),
+    (if $._config.variables_expansion then container.withArgsMixin(['-config.expand-env=true']) else {}),
 
   tempo_query_container::
     container.new('tempo-query', $._images.tempo_query) +
